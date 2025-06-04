@@ -6,12 +6,10 @@ pipeline {
         }
     }
     environment {
-        // Option 1: If using separate username/password credentials
-        NEXUS_USERNAME = credentials('nexus-username')
-        NEXUS_PASSWORD = credentials('nexus-password')
+       
         
         // Option 2: If using single username/password credential (comment out Option 1 and use this)
-        // NEXUS_CREDS = credentials('nexus-creds')
+        NEXUS_CREDS = credentials('nexus-creds')
     }
     stages {
         stage('Checkout') {
@@ -27,7 +25,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Option 1: Using separate credentials
+                 
+
+                    // Option 2: Using single credential (uncomment if using NEXUS_CREDS)
                     writeFile file: 'temp-settings.xml', text: """
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -35,27 +35,12 @@ pipeline {
   <servers>
     <server>
       <id>nexus</id>
-      <username>${env.NEXUS_USERNAME}</username>
-      <password>${env.NEXUS_PASSWORD}</password>
+      <username>${env.NEXUS_CREDS_USR}</username>
+      <password>${env.NEXUS_CREDS_PSW}</password>
     </server>
   </servers>
 </settings>
 """
-
-                    // Option 2: Using single credential (uncomment if using NEXUS_CREDS)
-//                     writeFile file: 'temp-settings.xml', text: """
-// <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-//           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-//           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-//   <servers>
-//     <server>
-//       <id>nexus</id>
-//       <username>${env.NEXUS_CREDS_USR}</username>
-//       <password>${env.NEXUS_CREDS_PSW}</password>
-//     </server>
-//   </servers>
-// </settings>
-// """
                 }
                 
                 // For SNAPSHOT versions, use snapshots repository
