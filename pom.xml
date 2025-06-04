@@ -47,11 +47,11 @@
 		</dependency>
 	</dependencies>
 		<distributionManagement>
-	    <repository>
-	        <id>nexus</id>
-		<url>http://nexus-container:8081/repository/maven-releases-custom/</url>
-	    </repository>
-	</distributionManagement>
+    <repository>
+        <id>nexus</id>
+        <url>http://172.18.0.2:8081/repository/maven-releases-custom/</url>
+    </repository>
+</distributionManagement>
 
 	<build>
 		<plugins>
