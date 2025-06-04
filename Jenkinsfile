@@ -55,7 +55,7 @@ pipeline {
                     """
                 }
 
-                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://nexus-container:8081/repository/maven-releases-custom/'
+                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://nexus-container1:8081/repository/maven-releases-custom/'
             }
         }
     }
