@@ -44,10 +44,10 @@ pipeline {
                 }
                 
                 // For SNAPSHOT versions, use snapshots repository
-                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://172.18.0.2:8081/repository/maven-snapshots/'
+                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://nexus-container:8081/repository/maven-snapshots/'
                 
                 // Or for release versions (if you change version to 0.0.1 without -SNAPSHOT)
-                // sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://172.18.0.2:8081/repository/maven-releases-custom/'
+                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://nexus-container:8081/repository/maven-releases-custom/'
             }
         }
     }
