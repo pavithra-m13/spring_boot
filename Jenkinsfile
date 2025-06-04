@@ -1,29 +1,24 @@
 pipeline {
     agent {
-    docker {
-        image 'maven:3.9.6-eclipse-temurin-21'
-    }
-
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-21'
+        }
     }
     environment {
         NEXUS_USERNAME = credentials('nexus-creds') // Jenkins credentials ID
         NEXUS_PASSWORD = credentials('nexus-creds')
     }
-
     stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/pavithra-m13/spring_boot.git'
             }
         }
-
         stage('Build') {
             steps {
                 sh 'mvn clean install'
             }
         }
-
-
         stage('Deploy') {
             steps {
                 script {
@@ -62,10 +57,10 @@ pipeline {
                     """
                 }
 
-sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://172.18.0.2:8081/repository/maven-releases-custom/ -Dnetworkaddress.cache.ttl=0 -Dnetworkaddress.cache.negative.ttl=0'            }
+                sh 'mvn deploy --settings temp-settings.xml -DaltDeploymentRepository=nexus::default::http://nexus-container:8081/repository/maven-releases-custom/ -Dnetworkaddress.cache.ttl=0 -Dnetworkaddress.cache.negative.ttl=0'
+            }
         }
     }
-
     post {
         always {
             sh 'rm -f temp-settings.xml'
