@@ -5,9 +5,11 @@ pipeline {
             args '--network devnet'
         }
     }
+
     environment {
         NEXUS_CREDS = credentials('nexus-creds') // Jenkins credentials with ID = nexus-creds
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -18,6 +20,20 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running unit tests...'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Report') {
+            steps {
+                echo 'Publishing JUnit test results...'
+                junit 'target/surefire-reports/*.xml'
             }
         }
 
@@ -38,7 +54,7 @@ pipeline {
   </servers>
 </settings>
 """
-                    // Use Maven deploy with proper repo
+
                     def projectVersion = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
 
                     if (projectVersion.endsWith("-SNAPSHOT")) {
@@ -52,8 +68,10 @@ pipeline {
             }
         }
     }
+
     post {
         always {
+            echo 'Cleaning up temporary files...'
             sh 'rm -f temp-settings.xml'
         }
     }
